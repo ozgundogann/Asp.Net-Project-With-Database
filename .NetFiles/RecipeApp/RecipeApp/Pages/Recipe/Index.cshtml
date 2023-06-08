@@ -1,0 +1,97 @@
+﻿@page
+@model RecipeApp.Pages.Recipe.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+<form>
+    <p>
+        Title: <input type="text" asp-for="SearchString" />
+        <input type="submit" value="Filter" />
+    </p>
+</form>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Recipe[0].Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Recipe[0].Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Recipe[0].ImageUrl)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Recipe[0].Cuisine)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Recipe[0].DifficultyLevel)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Recipe[0].PreparationTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Recipe[0].CookingTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Recipe[0].Servings)
+            </th>
+            @*<th>
+                @Html.DisplayNameFor(model => model.Recipe[0].AuthorId)
+            </th>*@
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Recipe) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ImageUrl)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Cuisine)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DifficultyLevel)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PreparationTime) 
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CookingTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Servings)
+            </td>
+            @*<td>
+                @Html.DisplayFor(modelItem => item.AuthorId)
+            </td>*@
+            <td>
+                    @if(item.AuthorId != Model.userId)
+                    {
+                        <a asp-page="./Details" asp-route-id="@item.Id">Details</a>
+                    }
+                    else
+                    {
+                        <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a>
+                        <a asp-page="./Details" asp-route-id="@item.Id">Details</a>
+                        <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+                    }
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
