@@ -2,96 +2,88 @@
 @model RecipeApp.Pages.Recipe.IndexModel
 
 @{
-    ViewData["Title"] = "Index";
+	ViewData["Title"] = "Index";
+	int i = 0;
+	string rate = "";
 }
 
-<h1>Index</h1>
+<link rel="stylesheet" href="jquery.rateyo.css" />
+
+<h1>Recipe Application Index</h1>
 <form>
-    <p>
-        Title: <input type="text" asp-for="SearchString" />
-        <input type="submit" value="Filter" />
-    </p>
+	<p>
+		Title: <input type="text" asp-for="SearchString" />
+		<input type="submit" value="Filter" />
+	</p>
 </form>
 
 <p>
-    <a asp-page="Create">Create New</a>
+	<a asp-page="Create">Create New</a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Recipe[0].Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Recipe[0].Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Recipe[0].ImageUrl)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Recipe[0].Cuisine)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Recipe[0].DifficultyLevel)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Recipe[0].PreparationTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Recipe[0].CookingTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Recipe[0].Servings)
-            </th>
-            @*<th>
-                @Html.DisplayNameFor(model => model.Recipe[0].AuthorId)
-            </th>*@
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model.Recipe) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ImageUrl)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Cuisine)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DifficultyLevel)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PreparationTime) 
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CookingTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Servings)
-            </td>
-            @*<td>
-                @Html.DisplayFor(modelItem => item.AuthorId)
-            </td>*@
-            <td>
-                    @if(item.AuthorId != Model.userId)
-                    {
-                        <a asp-page="./Details" asp-route-id="@item.Id">Details</a>
-                    }
-                    else
-                    {
-                        <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a>
-                        <a asp-page="./Details" asp-route-id="@item.Id">Details</a>
-                        <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
-                    }
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+
+<div class="container">
+	<div class="row">
+		@foreach (var item in Model.Recipe)
+		{
+			<div class="col-md-3">
+				<div class="card" style="width: 18rem;">
+					@if (item.ImageUrl == null)
+					{
+						<img src="/images/DefaultPhoto.png" class="card-img-top" alt="...">
+					}
+					else
+					{
+						<img src=@Html.DisplayFor(modelItem => item.ImageUrl) class="card-img-top" alt="...">
+					}
+
+					<div class="card-body">
+
+						<h5 class="card-title">@Html.DisplayFor(modelItem => item.Title)</h5>
+
+						<p>
+							@if (Model.RecipeAverageRatingsList[i] == 0.0)
+							{
+								rate = "No rating";
+								i++;
+							}
+							else
+							{
+								rate = "Average rating: " + Model.RecipeAverageRatingsList[i].ToString() + " out of 5";
+								i++;
+							}
+							@rate
+						</p>
+
+						<p class="card-text">@Html.DisplayFor(modelItem => item.Description)</p>
+
+						@if (item.AuthorId != Model.userId)
+						{
+							<a class="btn btn-primary rounded-pill btn-sm" asp-page="./Details" asp-route-id="@item.Id">Details/Rate</a>
+						}
+						else
+						{
+							<a class="btn btn-primary rounded-pill btn-sm" asp-page="./Edit" asp-route-id="@item.Id">Edit </a>
+							<a class="btn btn-primary rounded-pill btn-sm" asp-page="./Details" asp-route-id="@item.Id">Details/Rate </a>
+							<a class="btn btn-danger rounded-pill btn-sm" asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+						}
+					</div>
+				</div>
+			</div>
+		}
+	</div>
+</div>
+
+<script src="~/js/jquery.min.js"></script>
+<script src="~/js/jquery.rateyo.min.js"></script>
+<script type="text/javascript">
+	$(function () {
+
+		$("#rateYo").rateYo({
+
+			onInit: function (rating, rateYoInstance) {
+
+				console.log("RateYo initialized! with " + rating);
+			}
+		});
+	});
+</script>

@@ -11,37 +11,60 @@ using RecipeApp.Models;
 
 namespace RecipeApp.Pages.Recipe
 {
-    [Authorize]
-    public class IndexModel : PageModel
-    {
-        private readonly RecipeApp.Models.RecipeAppContext _context;
+	[Authorize]
+	public class IndexModel : PageModel
+	{
+		private readonly RecipeApp.Models.RecipeAppContext _context;
 
-        public IndexModel(RecipeApp.Models.RecipeAppContext context)
-        {
-            _context = context;
-        }
+		public IndexModel(RecipeApp.Models.RecipeAppContext context)
+		{
+			_context = context;
+		}
+		public string userId { get; set; }
 
-        public IList<Models.Recipe> Recipe { get;set; } = default!;
+		[BindProperty(SupportsGet = true)]
+		public string? SearchString { get; set; }
+		public IList<Models.Recipe> Recipe { get; set; } = default!;
+		public List<double> RecipeAverageRatingsList { get; set; } = default!;
+		public async Task CalculateRatings()
+		{
+			var AllRecipes = await (from re in _context.Recipes
+									select re).ToListAsync();
 
-        public string userId { get; set; }
+			var AllRatings = await (from ra in _context.Ratings
+									select ra).ToListAsync();
 
-        [BindProperty(SupportsGet =true)]
-        public string? SearchString { get; set; }
 
-        public async Task OnGetAsync()
-        {
-            userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (_context.Recipes != null)
-            {
-                if(!string.IsNullOrEmpty(SearchString))
-                {
-                    Recipe = await _context.Recipes.Where(s => s.Title.Contains(SearchString)).ToListAsync();
-                }
-                else
-                {
-                    Recipe = await _context.Recipes.ToListAsync();
-                }
-            }
-        }
-    }
+			RecipeAverageRatingsList = new List<Double>();
+
+			foreach (var item in AllRecipes)
+			{
+				List<int> recipeRates = await (from x in _context.Ratings
+												where x.RecipeId == item.Id
+												select x.Value.GetValueOrDefault()).ToListAsync();
+
+				if (recipeRates.Count >= 1)
+				{
+					double avg = CalculateRate.GetRating(recipeRates);
+					avg = Math.Round(avg, 1);
+					RecipeAverageRatingsList.Add(avg);
+				}
+				else
+				{
+					RecipeAverageRatingsList.Add(0.0);
+				}
+			}
+		}
+
+		public async Task OnGetAsync()
+		{
+			userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+			if (_context.Recipes != null)
+			{
+				Recipe = await _context.Recipes.ToListAsync();
+				await CalculateRatings();
+			}
+		}
+
+	}
 }
