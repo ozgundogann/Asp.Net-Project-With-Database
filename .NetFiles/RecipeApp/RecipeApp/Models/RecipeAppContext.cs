@@ -31,6 +31,8 @@ public partial class RecipeAppContext : DbContext
 
     public virtual DbSet<Direction> Directions { get; set; }
 
+    public virtual DbSet<Favourite> Favourites { get; set; }
+
     public virtual DbSet<Ingredient> Ingredients { get; set; }
 
     public virtual DbSet<Rating> Ratings { get; set; }
@@ -122,7 +124,7 @@ public partial class RecipeAppContext : DbContext
             entity.ToTable("Comment");
 
             entity.Property(e => e.Content)
-                .HasMaxLength(255)
+                .HasMaxLength(140)
                 .IsUnicode(false);
             entity.Property(e => e.UserId).HasMaxLength(450);
         });
@@ -134,6 +136,15 @@ public partial class RecipeAppContext : DbContext
             entity.Property(e => e.Description)
                 .HasMaxLength(140)
                 .IsUnicode(false);
+        });
+
+        modelBuilder.Entity<Favourite>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK_Favourities");
+
+            entity.ToTable("Favourite");
+
+            entity.Property(e => e.UserId).HasMaxLength(450);
         });
 
         modelBuilder.Entity<Ingredient>(entity =>

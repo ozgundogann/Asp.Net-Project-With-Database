@@ -4,6 +4,7 @@
 @{
 	ViewData["Title"] = "Index";
 	int i = 0;
+	int j = 0;
 	string rate = "";
 }
 
@@ -21,12 +22,18 @@
 	<a asp-page="Create">Create New</a>
 </p>
 
+@if(Model.FavouriteRecipeList.Count > 0)
+{
+	<h1>Favourites</h1>
+}
+
 <div class="container">
 	<div class="row">
-		@foreach (var item in Model.Recipe)
+		@foreach (var item in Model.FavouriteRecipeList)
 		{
 			<div class="col-md-3">
 				<div class="card" style="width: 18rem;">
+
 					@if (item.ImageUrl == null)
 					{
 						<img src="/images/DefaultPhoto.png" class="card-img-top" alt="...">
@@ -50,6 +57,62 @@
 							{
 								rate = "Average rating: " + Model.RecipeAverageRatingsList[i].ToString() + " out of 5";
 								i++;
+							}
+							@rate
+						</p>
+
+						<p class="card-text">@Html.DisplayFor(modelItem => item.Description)</p>
+
+						@if (item.AuthorId != Model.userId)
+						{
+							<a class="btn btn-primary rounded-pill btn-sm" asp-page="./Details" asp-route-id="@item.Id">Details/Rate</a>
+							<a class="btn btn-danger rounded-pill btn-sm" asp-page="./Comment" asp-route-id="@item.Id">Comments</a>
+						}
+						else
+						{
+							<a class="btn btn-primary rounded-pill btn-sm" asp-page="./Edit" asp-route-id="@item.Id">Edit </a>
+							<a class="btn btn-primary rounded-pill btn-sm" asp-page="./Details" asp-route-id="@item.Id">Details/Rate </a>
+							<a class="btn btn-danger rounded-pill btn-sm" asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+							
+						}
+					</div>
+				</div>
+			</div>
+		}
+	</div>
+</div>
+<br>
+<br>
+<h1>All Recipes</h1>
+<div class="container">
+	<div class="row">
+		@foreach (var item in Model.Recipe)
+		{
+			<div class="col-md-3">
+				<div class="card" style="width: 18rem;">
+					@if (item.ImageUrl == null)
+					{
+						<img src="/images/DefaultPhoto.png" class="card-img-top" alt="...">
+					}
+					else
+					{
+						<img src=@Html.DisplayFor(modelItem => item.ImageUrl) class="card-img-top" alt="...">
+					}
+
+					<div class="card-body">
+
+						<h5 class="card-title">@Html.DisplayFor(modelItem => item.Title)</h5>
+
+						<p>
+							@if (Model.RecipeAverageRatingsList[j] == 0.0)
+							{
+								rate = "No rating";
+								j++;
+							}
+							else
+							{
+								rate = "Average rating: " + Model.RecipeAverageRatingsList[j].ToString() + " out of 5";
+								j++;
 							}
 							@rate
 						</p>

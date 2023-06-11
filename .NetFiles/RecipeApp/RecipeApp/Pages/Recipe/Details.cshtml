@@ -3,6 +3,7 @@
 
 @{
 	ViewData["Title"] = "Details";
+	bool x = Model.flag;
 }
 
 <link href="~/css/jquery.rateyo.min.css" rel="stylesheet" />
@@ -70,19 +71,29 @@
 	</dl>
 </div>
 
-<div>
-	<a asp-page="./Edit" asp-route-id="@Model.Recipe?.Id">Edit</a> |
-	<a asp-page="./Index">Back to List</a>
-</div>
-
+<br />
+<p>Add it to your favourite</p>
 
 <form method="post">
 	<div>
+		<img src="~/images/favouriteButton.png" style="height: 50px; width: 50px;" />
+		<input asp-for="flag" type="checkbox" class="btn btn-primary" style="height: 35px; width: 35px;" checked="@(Model.controlVal == true ? true : false)" />
 		<div id="rateIt"></div>
+		<br />
 		<input name="_rate" type="hidden" id="rating" />
 		<button type="submit" class="btn btn-primary" id="getRating">Rate it!</button>
 	</div>
 </form>
+<br />
+
+
+<div>
+	<a asp-page="./Edit" class="btn btn-primary" asp-route-id="@Model.Recipe?.Id">Edit</a> |
+	<a asp-page="./Index" class="btn btn-primary">Back to List</a> 
+	
+	
+</div>
+
 
 <script src="~/js/jquery.min.js"></script>
 <script src="~/js/jquery.rateyo.min.js"></script>
@@ -98,5 +109,7 @@
 			}
 		});
 
+
 	});
 </script>
+

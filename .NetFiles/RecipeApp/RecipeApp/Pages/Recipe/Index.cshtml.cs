@@ -24,18 +24,22 @@ namespace RecipeApp.Pages.Recipe
 
 		[BindProperty(SupportsGet = true)]
 		public string? SearchString { get; set; }
+
+		[BindProperty(SupportsGet = true)]
+		public List<Models.Recipe> FavouriteRecipeList { get; set; }
+
 		public IList<Models.Recipe> Recipe { get; set; } = default!;
+		public IList<Models.Favourite> Favourites { get; set; } = default!;
 		public List<double> RecipeAverageRatingsList { get; set; } = default!;
 		public async Task CalculateRatings()
 		{
 			var AllRecipes = await (from re in _context.Recipes
 									select re).ToListAsync();
 
+			RecipeAverageRatingsList = new List<Double>();
+
 			var AllRatings = await (from ra in _context.Ratings
 									select ra).ToListAsync();
-
-
-			RecipeAverageRatingsList = new List<Double>();
 
 			foreach (var item in AllRecipes)
 			{
@@ -55,16 +59,41 @@ namespace RecipeApp.Pages.Recipe
 				}
 			}
 		}
+		
 
 		public async Task OnGetAsync()
 		{
 			userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+			if (_context.Favourites != null)
+			{
+				Favourites = await _context.Favourites.ToListAsync();
+			}
 			if (_context.Recipes != null)
 			{
 				Recipe = await _context.Recipes.ToListAsync();
 				await CalculateRatings();
 			}
-		}
+
+			var AllRrecipes = await (from re in _context.Recipes
+									select re).ToListAsync();
+			var AllFavorutes = await (from fa in _context.Favourites
+									  select fa).ToListAsync();
+
+            foreach (var item in AllRrecipes)
+            {
+                foreach (var favitem in AllFavorutes)
+                {
+                    if(item.Id == favitem.RecipeId && userId == favitem.UserId)
+					{
+						FavouriteRecipeList.Add(item);
+					}
+                }
+            }
+
+
+
+        }
 
 	}
 }

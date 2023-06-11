@@ -1,0 +1,34 @@
+﻿@page "{Id}"
+@model RecipeApp.Pages.Recipe.CommentModel
+@{
+	int i = 0;
+}
+
+<div class="col-md-6">
+	<div class="card">
+		@if (Model.Recipe.ImageUrl == null)
+		{
+			<img src="/images/DefaultPhoto.png" class="card-img-top" alt="...">
+		}
+		else
+		{
+			<img src=@Html.DisplayFor(modelItem => Model.Recipe.ImageUrl) class="card-img-top" alt="...">
+		}
+		<div class="card-body">
+			@foreach (var item in Model.CommentsList)
+			{
+				<p class="card-text"> @item.Content </p>
+			}
+		</div>
+	</div>
+</div>
+<form method="post">
+	<div>
+
+		<span asp-validation-for="Comments.Content"></span>
+
+		<input name="_comment" id="comment" />
+		<button type="submit" class="btn btn-primary">Add Comment</button>
+
+	</div>
+</form>
