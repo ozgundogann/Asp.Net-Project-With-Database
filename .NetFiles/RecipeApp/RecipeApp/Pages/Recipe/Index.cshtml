@@ -13,16 +13,16 @@
 <h1>Recipe Application Index</h1>
 <form>
 	<p>
-		Title: <input type="text" asp-for="SearchString" />
-		<input type="submit" value="Filter" />
+		Title: <input type="text" asp-for="SearchString" style="border-radius: 10px" />
+		<input style="border-radius: 10px" type="submit" value="Filter" />
 	</p>
 </form>
 
 <p>
-	<a asp-page="Create">Create New</a>
+	<a asp-page="Create" class="btn btn-success">Create New</a>
 </p>
 
-@if(Model.FavouriteRecipeList.Count > 0)
+@if (Model.FavouriteRecipeList.Count > 0)
 {
 	<h1>Favourites</h1>
 }
@@ -31,8 +31,8 @@
 	<div class="row">
 		@foreach (var item in Model.FavouriteRecipeList)
 		{
-			<div class="col-md-3">
-				<div class="card" style="width: 18rem;">
+			<div class="col-md-4">
+				<div class="card" style="width: 24rem;">
 
 					@if (item.ImageUrl == null)
 					{
@@ -47,33 +47,19 @@
 
 						<h5 class="card-title">@Html.DisplayFor(modelItem => item.Title)</h5>
 
-						<p>
-							@if (Model.RecipeAverageRatingsList[i] == 0.0)
-							{
-								rate = "No rating";
-								i++;
-							}
-							else
-							{
-								rate = "Average rating: " + Model.RecipeAverageRatingsList[i].ToString() + " out of 5";
-								i++;
-							}
-							@rate
-						</p>
-
 						<p class="card-text">@Html.DisplayFor(modelItem => item.Description)</p>
 
 						@if (item.AuthorId != Model.userId)
 						{
 							<a class="btn btn-primary rounded-pill btn-sm" asp-page="./Details" asp-route-id="@item.Id">Details/Rate</a>
-							<a class="btn btn-danger rounded-pill btn-sm" asp-page="./Comment" asp-route-id="@item.Id">Comments</a>
+							<a class="btn btn-primary rounded-pill btn-sm" asp-page="./Comment" asp-route-id="@item.Id">Comment</a>
 						}
 						else
 						{
 							<a class="btn btn-primary rounded-pill btn-sm" asp-page="./Edit" asp-route-id="@item.Id">Edit </a>
 							<a class="btn btn-primary rounded-pill btn-sm" asp-page="./Details" asp-route-id="@item.Id">Details/Rate </a>
 							<a class="btn btn-danger rounded-pill btn-sm" asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
-							
+							<a class="btn btn-primary rounded-pill btn-sm" asp-page="./Comment" asp-route-id="@item.Id">Comment</a>
 						}
 					</div>
 				</div>
@@ -88,8 +74,8 @@
 	<div class="row">
 		@foreach (var item in Model.Recipe)
 		{
-			<div class="col-md-3">
-				<div class="card" style="width: 18rem;">
+			<div class="col-md-4">
+				<div class="card" style="width: 24rem;">
 					@if (item.ImageUrl == null)
 					{
 						<img src="/images/DefaultPhoto.png" class="card-img-top" alt="...">
@@ -122,12 +108,14 @@
 						@if (item.AuthorId != Model.userId)
 						{
 							<a class="btn btn-primary rounded-pill btn-sm" asp-page="./Details" asp-route-id="@item.Id">Details/Rate</a>
+							<a class="btn btn-primary rounded-pill btn-sm" asp-page="./Comment" asp-route-id="@item.Id">Comment</a>
 						}
 						else
 						{
 							<a class="btn btn-primary rounded-pill btn-sm" asp-page="./Edit" asp-route-id="@item.Id">Edit </a>
 							<a class="btn btn-primary rounded-pill btn-sm" asp-page="./Details" asp-route-id="@item.Id">Details/Rate </a>
 							<a class="btn btn-danger rounded-pill btn-sm" asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+							<a class="btn btn-primary rounded-pill btn-sm" asp-page="./Comment" asp-route-id="@item.Id">Comment</a>
 						}
 					</div>
 				</div>

@@ -44,8 +44,8 @@ namespace RecipeApp.Pages.Recipe
 			foreach (var item in AllRecipes)
 			{
 				List<int> recipeRates = await (from x in _context.Ratings
-												where x.RecipeId == item.Id
-												select x.Value.GetValueOrDefault()).ToListAsync();
+											   where x.RecipeId == item.Id
+											   select x.Value.GetValueOrDefault()).ToListAsync();
 
 				if (recipeRates.Count >= 1)
 				{
@@ -59,7 +59,7 @@ namespace RecipeApp.Pages.Recipe
 				}
 			}
 		}
-		
+
 
 		public async Task OnGetAsync()
 		{
@@ -71,29 +71,38 @@ namespace RecipeApp.Pages.Recipe
 			}
 			if (_context.Recipes != null)
 			{
-				Recipe = await _context.Recipes.ToListAsync();
+				if (!string.IsNullOrEmpty(SearchString))
+				{
+					Recipe = await _context.Recipes.Where(s => s.Title.Contains(SearchString) ||
+																s.Description.Contains(SearchString) ||
+																s.Cuisine.Contains(SearchString)).ToListAsync();
+				}
+				else
+				{
+					Recipe = await _context.Recipes.ToListAsync();
+				}
 				await CalculateRatings();
 			}
 
 			var AllRrecipes = await (from re in _context.Recipes
-									select re).ToListAsync();
+									 select re).ToListAsync();
 			var AllFavorutes = await (from fa in _context.Favourites
 									  select fa).ToListAsync();
 
-            foreach (var item in AllRrecipes)
-            {
-                foreach (var favitem in AllFavorutes)
-                {
-                    if(item.Id == favitem.RecipeId && userId == favitem.UserId)
+			foreach (var item in AllRrecipes)
+			{
+				foreach (var favitem in AllFavorutes)
+				{
+					if (item.Id == favitem.RecipeId && userId == favitem.UserId)
 					{
 						FavouriteRecipeList.Add(item);
 					}
-                }
-            }
+				}
+			}
 
 
 
-        }
+		}
 
 	}
 }

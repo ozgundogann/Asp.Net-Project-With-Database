@@ -24,6 +24,7 @@ namespace RecipeApp.Pages.Recipe
 		public Comment Comments { get; set; }
 
 		public List<Comment> CommentsList { get; set; } = new List<Comment>();
+		public List<Models.AspNetUser> UserList { get; set; } = new List<Models.AspNetUser>();
 
 		public Models.Recipe Recipe { get; set; } = new Models.Recipe();
 
@@ -51,17 +52,20 @@ namespace RecipeApp.Pages.Recipe
 
 		public async Task<IActionResult> OnGetAsync()
 		{
+			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 			var commentsList = await _context.Comments.Where(cl => cl.RecipeId == id).ToListAsync();
-			var recipeList = await _context.Recipes.FirstOrDefaultAsync(m => m.Id == id);
+			UserList = await (from u in _context.AspNetUsers
+									select u).ToListAsync();
+			var recipe= await _context.Recipes.FirstOrDefaultAsync(m => m.Id == id);
 
-			Recipe = recipeList;
+			Recipe = recipe;
 
 			foreach (var comment in commentsList)
 			{
 				CommentsList.Add(comment);
 			}
 
-			return Page();
+            return Page();
 		}
 	}
 

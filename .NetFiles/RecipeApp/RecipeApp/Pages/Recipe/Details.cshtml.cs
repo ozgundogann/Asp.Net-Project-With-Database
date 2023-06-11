@@ -32,7 +32,7 @@ namespace RecipeApp.Pages.Recipe
 		public bool flag { get; set; }
 
 		[BindProperty(SupportsGet = true)]
-		public bool controlVal { get; set; }
+		public bool controlVal { get; set; } //if checkbox is checked or not
 
 		
 
@@ -63,10 +63,6 @@ namespace RecipeApp.Pages.Recipe
 					controlVal = true;
 			}
 
-			
-			
-
-
 			return Page();
 		}
 
@@ -85,6 +81,8 @@ namespace RecipeApp.Pages.Recipe
 				if (item.UserId == userId && item.RecipeId == id)
 				{
 					check = true;
+					if (_rate == 0)
+						break;
 					item.Value = _rate;
 					_context.Ratings.Update(item);
 					await _context.SaveChangesAsync();
