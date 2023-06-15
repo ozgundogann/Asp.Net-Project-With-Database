@@ -14,17 +14,19 @@
 		{
 			<img src=@Html.DisplayFor(modelItem => Model.Recipe.ImageUrl) class="card-img-top" alt="...">
 		}
-		<div class="card-body">
-			@foreach (var user in Model.UserList)
-			{
-				@foreach (var item in Model.CommentsList)
-				{
-					if (user.Id == item.UserId)
-					{
-						<p class="card-text"> @user.UserName: @item.Content </p>
+		<h3>@Html.DisplayFor(modelItem => Model.Recipe.Title)</h3>
+		<h6>Comments</h6>
 
-					}
-				}
+		<div class="card-body">
+			@foreach (var item in Model.CommentsList)
+			{
+				
+					@foreach (var user in Model.UserList)
+						if (user.Id == item.UserId)
+						{
+							<p class="card-text"> @user.UserName: @item.Content </p>
+						}
+				
 			}
 		</div>
 	</div>

@@ -3,7 +3,6 @@
 
 @{
 	ViewData["Title"] = "Details";
-	bool x = Model.flag;
 }
 
 <link href="~/css/jquery.rateyo.min.css" rel="stylesheet" />
@@ -88,10 +87,11 @@
 
 
 <div>
-	<a asp-page="./Edit" class="btn btn-primary" asp-route-id="@Model.Recipe?.Id">Edit</a> |
-	<a asp-page="./Index" class="btn btn-primary">Back to List</a> 
-	
-	
+	<a asp-page="./Edit" class="btn btn-secondary" asp-route-id="@Model.Recipe?.Id">Edit</a> |
+	<a asp-page="./Ingredient/Index" class="btn btn-dark" asp-route-id="@Model.Recipe?.Id">Ingredient</a> |
+	<a asp-page="./Index" class="btn btn-secondary">Back to List</a>
+
+
 </div>
 
 

@@ -23,6 +23,7 @@ namespace RecipeApp.Pages.Recipe
 		}
 
 		public Models.Recipe Recipe { get; set; } = default!;
+		public Models.Ingredient Ingredient { get; set; } = default!;
 
 
 		[BindProperty(SupportsGet = true)]

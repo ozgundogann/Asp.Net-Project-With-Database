@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using RecipeApp.Models;
 
 namespace RecipeApp.Data
 {
@@ -9,5 +10,6 @@ namespace RecipeApp.Data
             : base(options)
         {
         }
+        public DbSet<RecipeApp.Models.Ingredient> Ingredient { get; set; } = default!;
     }
 }
